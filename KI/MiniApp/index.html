@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>可嗳 K.I - 社交流程交互原型</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root { --primary: #7ED321; }
+        body { background-color: #E2E8F0; font-family: -apple-system, "PingFang SC", sans-serif; display: flex; justify-center; align-items: center; min-height: screen; }
+
+        /* 基础拟物样式 */
+        .neu-surface {
+            background: #FDFDFD;
+            box-shadow: 6px 6px 15px rgba(200, 210, 205, 0.3), -6px -6px 15px rgba(255, 255, 255, 0.8);
+        }
+        .neu-pure {
+            background: #FFFFFF;
+            box-shadow: 10px 10px 25px rgba(210, 215, 212, 0.2), -10px -10px 25px #FFFFFF;
+        }
+        .card-press:active { transform: scale(0.96); transition: 0.1s; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+
+        /* 页面切换动画 */
+        .page-transition { transition: all 0.5s cubic-bezier(0.32, 0.72, 0, 1); }
+        .drawer-up { transform: translateY(0); }
+        .drawer-down { transform: translateY(100%); }
+        
+        /* 视窗化主页的渐变遮罩 */
+        .scrolling-content { mask-image: linear-gradient(to bottom, transparent 0%, black 20px); }
+    </style>
+</head>
+<body class="flex justify-center items-center min-h-screen">
+
+    <div class="w-[375px] h-[780px] bg-[#F8FAF9] rounded-[48px] shadow-2xl overflow-hidden relative flex flex-col border-[8px] border-white">
+        
+        <div id="listPage" class="flex-1 flex flex-col overflow-hidden">
+            <header class="px-8 pt-14 pb-6 flex justify-between items-center bg-[#F8FAF9]">
+                <h1 class="text-xl font-bold text-gray-800">发现</h1>
+                <div class="w-10 h-10 rounded-full neu-surface flex items-center justify-center">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4A5568" stroke-width="2"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                </div>
+            </header>
+            
+            <div class="flex-1 overflow-y-auto px-8 space-y-6 pb-20 no-scrollbar">
+                <div class="neu-pure rounded-[32px] p-5 border border-white/50">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div onclick="openDrawer()" class="w-12 h-12 rounded-[18px] neu-surface p-0.5 cursor-pointer card-press">
+                            <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Cheese" class="rounded-[16px] bg-gray-50">
+                        </div>
+                        <div>
+                            <div class="text-sm font-bold text-gray-700">半熟芝士</div>
+                            <div class="text-[10px] text-gray-300 font-medium">2小时前</div>
+                        </div>
+                    </div>
+                    <p class="text-[13px] text-gray-600 leading-relaxed">有些事不用一次做完，有些话不用一次说尽。☁️</p>
+                </div>
+
+                <div class="neu-pure rounded-[32px] p-5 border border-white/50 opacity-60">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-12 h-12 rounded-[18px] neu-surface p-0.5">
+                            <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Felix" class="rounded-[16px] bg-gray-50">
+                        </div>
+                        <div class="text-sm font-bold text-gray-700">风的形状</div>
+                    </div>
+                    <div class="w-full h-32 bg-gray-50 rounded-2xl mb-3"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="drawerOverlay" onclick="closeDrawer()" class="fixed inset-0 bg-black/10 backdrop-blur-[2px] z-40 hidden opacity-0 transition-opacity duration-300"></div>
+        
+        <div id="userDrawer" class="absolute bottom-0 left-0 w-full z-50 transform translate-y-full page-transition">
+            <div class="neu-pure rounded-t-[40px] p-8 border-t border-white shadow-[0_-15px_40px_rgba(0,0,0,0.05)]">
+                <div class="w-10 h-1 rounded-full bg-gray-100 mx-auto mb-8"></div>
+                
+                <div class="flex items-center justify-between mb-8">
+                    <div class="flex items-center space-x-5">
+                        <div class="w-20 h-20 rounded-[28px] neu-surface p-1">
+                            <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Cheese" class="rounded-[22px]">
+                        </div>
+                        <div>
+                            <h2 class="text-lg font-bold text-gray-700">半熟芝士</h2>
+                            <div class="flex items-center space-x-1.5 mt-1">
+                                <span class="text-[11px] text-[#7ED321] font-bold">灵魂共鸣 70%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="goToProfile()" class="w-12 h-12 rounded-2xl neu-surface flex items-center justify-center card-press">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7ED321" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+                    </button>
+                </div>
+
+                <div class="flex flex-wrap gap-2 mb-6">
+                    <span class="text-[10px] text-orange-400 border border-orange-100 px-3 py-1.5 rounded-xl font-medium">不接突发语音</span>
+                    <span class="text-[10px] text-gray-400 bg-gray-50 px-3 py-1.5 rounded-xl font-medium">拒绝无效社交</span>
+                </div>
+                
+                <button onclick="goToProfile()" class="w-full py-4 bg-[#7ED321]/5 text-[#7ED321] rounded-2xl text-[12px] font-bold tracking-widest card-press">
+                    点击查看完整个人主页
+                </button>
+            </div>
+        </div>
+
+        <div id="fullProfile" class="absolute inset-0 bg-[#F8FAF9] z-[60] transform translate-x-full page-transition flex flex-col overflow-hidden">
+            <header class="px-8 pt-12 pb-2 flex-shrink-0">
+                <div class="flex items-center justify-between mb-6">
+                    <div onclick="backFromProfile()" class="w-9 h-9 rounded-full bg-white shadow-sm flex items-center justify-center card-press">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4A5568" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+                    </div>
+                    <div class="w-9 h-9 rounded-full bg-white shadow-sm flex items-center justify-center">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4A5568" stroke-width="2.5"><circle cx="12" cy="12" r="1.5"></circle><circle cx="12" cy="5" r="1.5"></circle><circle cx="12" cy="19" r="1.5"></circle></svg>
+                    </div>
+                </div>
+
+                <div class="flex items-end justify-between mb-4">
+                    <div class="w-20 h-20 rounded-[32px] neu-pure p-1 border border-white">
+                        <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Cheese" class="rounded-[24px]">
+                    </div>
+                    <div class="text-right">
+                        <span class="text-[9px] text-[#7ED321] font-bold tracking-widest block opacity-60">灵魂共鸣</span>
+                        <div class="flex items-baseline space-x-1 justify-end">
+                            <span class="text-2xl font-bold text-[#7ED321]">70</span>
+                            <span class="text-[10px] font-bold text-gray-200">%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <h2 class="text-sm font-bold text-gray-700 mb-1">半熟芝士 <span class="ml-1 text-[9px] font-normal text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded">INFP</span></h2>
+                <p class="text-[11px] text-gray-400 mb-4">生活碎片收集者，长期放空中。</p>
+
+                <div class="neu-pure rounded-[22px] p-3 space-y-2 mb-4 border border-white/40">
+                    <div class="flex items-center space-x-2 text-[10px] text-gray-500">
+                        <span class="w-3.5 h-3.5 rounded-full bg-[#7ED321]/10 flex items-center justify-center text-[#7ED321]">+</span>
+                        <span>胶片摄影 · 后摇 · 深宵食堂</span>
+                    </div>
+                    <div class="flex items-center space-x-2 text-[10px] text-gray-500">
+                        <span class="w-3.5 h-3.5 rounded-full bg-orange-50 flex items-center justify-center text-orange-400">/</span>
+                        <span>不接突发语音 · 拒绝无效社交</span>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center px-1">
+                    <h3 class="text-sm font-bold text-gray-700">最近公开动态</h3>
+                    <span class="text-[9px] font-bold text-gray-200 tracking-widest uppercase">Public</span>
+                </div>
+            </header>
+
+            <main class="flex-1 overflow-y-auto no-scrollbar scrolling-content px-8 pb-32">
+                <div class="space-y-4 pt-2">
+                    <div class="neu-pure rounded-[32px] p-5 border border-white/50">
+                        <p class="text-[13px] text-gray-600 leading-relaxed mb-3">今天巷口的花。每个人都有自己的花期。</p>
+                        <span class="text-[10px] text-gray-300 font-bold uppercase">04.28</span>
+                    </div>
+                    <div class="neu-pure rounded-[32px] p-4 border border-white/50">
+                        <div class="w-full h-36 bg-gray-100 rounded-[24px] mb-3 overflow-hidden border border-white">
+                            <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=400&auto=format&fit=crop" class="w-full h-full object-cover">
+                        </div>
+                        <p class="text-[12px] text-gray-600 px-1 mb-2">那些说不清的情绪。</p>
+                        <span class="text-[10px] text-gray-300 font-bold px-1 uppercase">04.25</span>
+                    </div>
+                    <div class="neu-pure rounded-[32px] p-5 border border-white/50">
+                        <p class="text-[13px] text-gray-600 leading-relaxed mb-3">缓慢是一种极其珍贵的超能力。</p>
+                        <span class="text-[10px] text-gray-300 font-bold uppercase">04.22</span>
+                    </div>
+                </div>
+            </main>
+
+            <footer class="absolute bottom-0 left-0 w-full px-8 pb-10 pt-6 bg-gradient-to-t from-[#F8FAF9] to-transparent z-[70]">
+                <div class="flex space-x-4">
+                    <div class="w-14 h-14 rounded-[24px] neu-surface flex items-center justify-center card-press">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#CBD5E0" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                    </div>
+                    <div class="flex-1 h-14 bg-[#7ED321] rounded-[24px] shadow-lg shadow-[#7ED321]/20 flex items-center justify-center text-white text-sm font-bold tracking-[0.15em] card-press">
+                        递个纸条
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        const drawer = document.getElementById('userDrawer');
+        const overlay = document.getElementById('drawerOverlay');
+        const fullProfile = document.getElementById('fullProfile');
+
+        function openDrawer() {
+            overlay.classList.remove('hidden');
+            setTimeout(() => {
+                overlay.classList.add('opacity-100');
+                drawer.classList.remove('translate-y-full');
+            }, 10);
+        }
+
+        function closeDrawer() {
+            drawer.classList.add('translate-y-full');
+            overlay.classList.remove('opacity-100');
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+            }, 300);
+        }
+
+        function goToProfile() {
+            closeDrawer();
+            setTimeout(() => {
+                fullProfile.classList.remove('translate-x-full');
+            }, 200);
+        }
+
+        function backFromProfile() {
+            fullProfile.classList.add('translate-x-full');
+        }
+    </script>
+</body>
+</html>
