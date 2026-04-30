@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>消息 - 纸条与共振</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --primary: #7ED321;
+            --bg-page: #F8F9FA;
+        }
+        body {
+            background-color: #E2E8F0;
+            font-family: -apple-system, "PingFang SC", sans-serif;
+        }
+        .chat-card {
+            background: #FFFFFF;
+            transition: all 0.3s ease;
+        }
+        .chat-card:active {
+            background: #F1F8E9;
+            transform: scale(0.98);
+        }
+        /* 弱化红点：采用柔和的微光，而不是扎眼的实色红 */
+        .unread-glow {
+            width: 8px;
+            height: 8px;
+            background: var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--primary);
+        }
+        /* 顶部切换栏的微交互 */
+        .msg-tab-active {
+            color: #333;
+            font-weight: 600;
+        }
+        .msg-tab-active::after {
+            content: '';
+            display: block;
+            width: 12px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 2px;
+            margin: 4px auto 0;
+        }
+        ::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="flex justify-center items-center min-h-screen">
+
+    <div class="w-[375px] h-[780px] bg-[#F8F9FA] rounded-[45px] shadow-2xl overflow-hidden relative flex flex-col border-[6px] border-white">
+        
+        <div class="px-8 pt-14 pb-6 bg-white/80 backdrop-blur-md">
+            <div class="flex justify-between items-end">
+                <h2 class="text-xl font-bold text-gray-800">消息</h2>
+                <div class="flex space-x-6 pb-1">
+                    <span class="text-xs msg-tab-active">私聊</span>
+                    <span class="text-xs text-gray-400">共振记录</span>
+                    <span class="text-xs text-gray-400">通知</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex-1 overflow-y-auto pb-24">
+            
+            <div class="px-6 py-4">
+                <div class="bg-gradient-to-br from-[#7ED321] to-[#9EE34B] rounded-[28px] p-5 text-white shadow-lg shadow-[#7ED321]/20 flex justify-between items-center relative overflow-hidden">
+                    <div class="z-10">
+                        <h3 class="text-sm font-bold">未拆开的纸条 (2)</h3>
+                        <p class="text-[10px] opacity-80 mt-1">慢慢回复，没人催你</p>
+                    </div>
+                    <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center text-xl z-10">✉️</div>
+                    <div class="absolute -right-4 -bottom-4 w-20 h-20 bg-white opacity-10 rounded-full"></div>
+                </div>
+            </div>
+
+            <div class="mt-2">
+                <div class="chat-card px-6 py-4 flex items-center space-x-4">
+                    <div class="relative">
+                        <div class="w-12 h-12 rounded-2xl overflow-hidden bg-gray-100">
+                            <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Aria" alt="avatar">
+                        </div>
+                        <div class="absolute -top-1 -right-1 unread-glow"></div>
+                    </div>
+                    <div class="flex-1 border-b border-gray-50 pb-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm font-bold text-gray-700">荒野猎手</span>
+                            <span class="text-[10px] text-gray-300 font-mono">14:20</span>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-1 truncate w-48">那本书的第三章我也非常喜欢...</p>
+                    </div>
+                </div>
+
+                <div class="chat-card px-6 py-4 flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-2xl overflow-hidden bg-gray-100">
+                        <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Felix" alt="avatar">
+                    </div>
+                    <div class="flex-1 border-b border-gray-50 pb-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm font-bold text-gray-700">晚安收藏家</span>
+                            <span class="text-[10px] text-gray-300 font-mono">昨天</span>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-1 truncate w-48">[共振] 对方邀请你一起在静谧自习室...</p>
+                    </div>
+                </div>
+
+                <div class="chat-card px-6 py-4 flex items-center space-x-4 opacity-70">
+                    <div class="w-12 h-12 rounded-2xl overflow-hidden bg-gray-100">
+                        <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Kiki" alt="avatar">
+                    </div>
+                    <div class="flex-1 pb-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm font-bold text-gray-700">半熟芝士</span>
+                            <span class="text-[10px] text-gray-300 font-mono">周三</span>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-1 truncate w-48">好的，那下次有机会再交流吧。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col items-center justify-center pt-10 opacity-20">
+                <div class="w-12 h-1 bg-gray-300 rounded-full"></div>
+                <span class="text-[9px] mt-4 tracking-[4px] uppercase font-bold text-gray-400">End of conversations</span>
+            </div>
+        </div>
+
+        <div class="absolute bottom-0 w-full h-20 bg-white/90 backdrop-blur-md border-t border-gray-50 flex items-center justify-around px-6 pb-6">
+            <div class="flex flex-col items-center text-gray-300">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                <span class="text-[10px] mt-1">首页</span>
+            </div>
+            <div class="flex flex-col items-center text-gray-300">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+                <span class="text-[10px] mt-1">空间</span>
+            </div>
+            <div class="w-12 h-12 bg-[#7ED321] rounded-2xl flex items-center justify-center shadow-lg shadow-[#7ED321]/30 -translate-y-2">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            </div>
+            <div class="flex flex-col items-center text-[#7ED321]">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                <span class="text-[10px] mt-1 font-bold">消息</span>
+            </div>
+            <div class="flex flex-col items-center text-gray-300">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <span class="text-[10px] mt-1">我</span>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
